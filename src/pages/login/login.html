@@ -1,0 +1,29 @@
+
+
+<ion-content >
+ <div id="header-login">
+    <h3>MANOLO</h3>
+ </div>
+
+ <ion-card>
+  <ion-card-header>
+    S'identifier
+  </ion-card-header>
+  <ion-card-content>
+      <form (ngSubmit)="login()"  [formGroup]="loginForm">
+            <ion-item>
+              <ion-label stacked>Pseudo</ion-label>
+              <ion-input type="text" formControlName="pseudo" ></ion-input>
+            </ion-item>
+            <p *ngIf="loginForm.hasError('invalid')" class="error">
+                Les données saisies sont incorrectes. 
+            </p>
+            <ion-item>
+              <ion-label stacked>Mot de passe</ion-label>
+              <ion-input type="password"  formControlName="password"></ion-input>
+            </ion-item>
+            <button ion-button full type="submit" [disabled]="!loginForm.valid" round  margin-top> S'identifier</button>
+        </form>
+    </ion-card-content>
+</ion-card>
+</ion-content>

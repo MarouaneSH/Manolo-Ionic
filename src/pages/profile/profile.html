@@ -1,0 +1,33 @@
+
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title text-center>Profile</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content >
+  <ion-card>
+    <ion-card-content>
+        <ion-card-title>
+          Modifier votre profile
+        </ion-card-title>
+        <form (ngSubmit)="changePassword()"  [formGroup]="loginForm">
+            <ion-item>
+              <ion-label stacked>Mot de passe</ion-label>
+              <ion-input type="password" formControlName="password" ></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label stacked>Répéter le mot de passe</ion-label>
+              <ion-input type="password"  formControlName="password_confirm"></ion-input>
+            </ion-item>
+            <button ion-button full type="submit" [disabled]="!loginForm.valid" round  margin-top>Modifier</button>
+          </form>
+          <ion-row justify-content-center>
+            <button (click)="logout()" ion-button small outline color="danger" margin-top>Déconnexion</button> 
+          </ion-row>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

@@ -1,0 +1,129 @@
+<!--
+  Generated template for the PanierPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title><ion-icon name="md-cart"></ion-icon> Panier</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content > 
+    <ion-row padding-horizontal style="margin-top:15px">
+        <button *ngIf="command && slides.getActiveIndex() > 0"
+                (click)="slideBack()" 
+                icon-start ion-button end small outline> 
+            <ion-icon name="ios-arrow-dropleft"></ion-icon>
+            Retour
+        </button>
+        <button  *ngIf="command && slides.getActiveIndex() > 0"
+                 ion-button outline small 
+                 color="danger"
+                 style="margin-left:auto"
+                (click)="cancelCommand()">
+                Annuler la commande
+        </button>
+    </ion-row>
+    <ion-row padding-horizontal>
+            <button  *ngIf="selectedArticles.length"
+                     ion-button  small  end
+                     color="secondary"
+                     style="margin-left:auto"
+                    (click)="showReglementAlert()">
+                    Régler la commande
+            </button>
+        </ion-row>
+
+   <ion-list  *ngIf="selectedArticles.length">
+       <h6 padding-horizontal>Article choisis ({{selectedArticles.length}})</h6>
+       <ng-container *ngIf="showSlected" >
+            <ion-item *ngFor="let article of selectedArticles">
+                <h2>{{article.designation}} </h2>
+                <p>
+                    Prix :  {{article.prix}} DH <br>
+                    Quantité :  {{article.quantite}} <br>
+                    <span class="total_price">Prxi total : {{article.prix_total}} DH</span>
+                </p>
+                
+                <button ion-button item-end small outline color="danger"
+                        (click)="removeArticle(article.id_article)">
+                            <ion-icon name="md-remove"></ion-icon> 
+                </button>
+            </ion-item> 
+       </ng-container>
+        
+        <div class="arrow-toggle-line"></div>
+        <button [class.rotatebtn]="!showSlected"  (click)="showSlected = !showSlected"  class="arrow-toggle" ion-fab><ion-icon name="ios-arrow-dropup"></ion-icon></button>
+    </ion-list>
+
+
+    <ion-slides>
+        <ion-slide style="align-items: center;">
+            <div *ngIf="!command else choose_article">
+                <button ion-button block (click)="openPanierModal()"  > 
+                    <div>
+                        <ion-icon name="md-cart"></ion-icon>
+                        <label>Passer une commande</label>
+                    </div>
+                </button>
+            </div>
+            <ng-template #choose_article> 
+                <ion-card>
+                  <ion-list>
+                    <ion-item>
+                        <h2>Commande </h2>
+                        <p>N commande : {{command.id}}</p>
+                    </ion-item>
+                    <ion-item>
+                      <h2>Client</h2>
+                      <p>CIN client : {{command.client.cin}}</p>
+                      <p>Nom client : {{command.client.nom}}</p>
+                      <p>Adresse client : {{command.client.adresse}}</p>
+                    </ion-item>
+                  </ion-list>
+                </ion-card>
+                <ion-row>
+                  <button ion-button full (click)="getCategory()" >Voir les catégories</button>
+                  <button ion-button full (click)="cancelCommand()">Annuler</button>
+                </ion-row>
+            </ng-template>
+        </ion-slide>
+        <ion-slide>
+          <h3 class="category_title" ion-center>Sélectionner une catégorie</h3>
+          <ion-row>
+            <ion-col col-6 *ngFor="let category of categories">
+                <ion-card class="card-category" (click)="getSubCategory(category.id_categorie)">
+                    {{category.libelle}}
+                </ion-card>
+            </ion-col>
+          </ion-row>
+        </ion-slide>
+        <ion-slide>
+          <h3 class="category_title" ion-center>Sélectionner une sous-catégorie</h3>
+          <ion-row>
+            <ion-col col-6 *ngFor="let sous_category of sous_categories">
+                <ion-card class="card-category" (click)="getArticles(sous_category.id_sous_categorie)">
+                    {{sous_category.libelle}}
+                </ion-card>
+            </ion-col>
+          </ion-row>
+        </ion-slide>
+        <ion-slide >
+            <h3 class="category_title" ion-center>Sélectionner des articles</h3>
+             <ion-list>
+                <ion-item *ngFor="let article of articles">
+                    <h2>{{article.designation}} </h2>
+                    <p>quantité en stock :  {{article.quantite}} </p>
+                    <button ion-button item-end small outline (click)="addArticle(article)"><ion-icon name="md-add"></ion-icon> </button>
+                </ion-item>  
+              </ion-list>
+          </ion-slide>
+      </ion-slides>
+  
+ 
+</ion-content>
