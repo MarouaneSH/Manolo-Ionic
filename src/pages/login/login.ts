@@ -27,6 +27,7 @@ export class LoginPage {
   }
 
   ionViewDidLoad() {
+    this.navCtrl.setRoot(TabsPage);
     this.authService.checkAuth().then(()=> {
       console.log("Already logged");
       this.navCtrl.setRoot(TabsPage);
