@@ -17,8 +17,10 @@ export class PanierPage {
   categories = [];
   sous_categories = [];
   articles = [];
+  filtredArticles = [];
   selectedArticles = [];
   showSlected = true;
+  montant_total = 0;
   @ViewChild(Slides) slides: Slides;
 
   constructor(public navCtrl: NavController, 
@@ -27,6 +29,7 @@ export class PanierPage {
               public authService:AuthServiceProvider,
               private alertCtrl: AlertController) {
   }
+
 
   ionViewDidLoad() {
     this.slides.lockSwipes(true);
@@ -37,7 +40,8 @@ export class PanierPage {
       this.authService.hideLoading();
     })
     //test
-    this.selectedArticles = JSON.parse('[{"id_article":5,"designation":"pepsi 33cl","quantite":"32","seuil_alert":100,"code_fk_fournisseur":1,"code_fk_sous_categorie":3,"code_fk_taxe":null,"prix":"32","prix_total":1024},{"id_article":6,"designation":"pepsi 0.5cl","quantite":918,"seuil_alert":100,"code_fk_fournisseur":1,"code_fk_sous_categorie":3,"code_fk_taxe":null,"prix_total":1024},{"id_article":7,"designation":"pepsi 1L","quantite":1000,"seuil_alert":100,"code_fk_fournisseur":1,"code_fk_sous_categorie":3,"code_fk_taxe":null,"prix_total":1024}]');
+    // this.openPanierModal();
+    // this.selectedArticles = JSON.parse('[{"id_article":5,"designation":"pepsi 33cl","quantite":"23","seuil_alert":100,"code_fk_fournisseur":1,"code_fk_sous_categorie":3,"code_fk_taxe":null,"prix":"232","prix_total":5336},{"id_article":6,"designation":"pepsi 0.5cl","quantite":"232","seuil_alert":100,"code_fk_fournisseur":1,"code_fk_sous_categorie":3,"code_fk_taxe":null,"prix":"23","prix_total":5336},{"id_article":7,"designation":"pepsi 1L","quantite":"23","seuil_alert":100,"code_fk_fournisseur":1,"code_fk_sous_categorie":3,"code_fk_taxe":null,"prix":"23","prix_total":529}]');
   }
 
 
@@ -53,6 +57,7 @@ export class PanierPage {
             id : response.command_id,
             client : response.client
           };
+          console.log(this.command.id);
         } else {
           this.presentAlert("Client non trouvé");
         }
@@ -132,6 +137,7 @@ export class PanierPage {
     this.authService.post_request("articles", {sous_category : sous_category}).then((response:any)=> {
       if(response.articles != null) {
         this.articles = response.articles ;
+        this.filtredArticles = Object.values((this.articles.reduce((acc,cur)=>Object.assign(acc,{[cur.id_article]:cur}),{})));
         console.log(this.articles);
         if(this.selectedArticles.length) {
           this.articles =  this.articles.filter(value => {
@@ -149,20 +155,28 @@ export class PanierPage {
   }
 
   addArticle(article) {
+    //check occurence article
+    let occurence = this.articles.filter((a)=> a.id_article == article.id_article);
+    let inputs = [];
+    if(occurence.length == 1) {
+      inputs.push({
+          value: article.prix_vente,
+          label: `${article.prix_vente} DH (${article.libelle})`,
+          type: "radio",
+      })
+    } else {
+      occurence.forEach(element => {
+          inputs.push({
+            value: element.prix_vente,
+            label: `${element.prix_vente} DH (${element.libelle})`,
+            type: "radio",
+        })
+      });
+    }
     let alert = this.alertCtrl.create({
       title: article.designation,
-      inputs: [
-        {
-          name: 'prix',
-          placeholder: 'Prix',
-          type: "number",
-        },
-        {
-          name: 'quantite',
-          placeholder: 'Quantité',
-          type: "number",
-        }
-      ],
+      subTitle: "Selectionner un prix",
+      inputs: inputs,
       buttons: [
         {
           text: 'Annuler',
@@ -172,17 +186,46 @@ export class PanierPage {
           }
         },
         {
-          text: 'Ajouter',
-          handler: data => {
-            if(article.quantite < data.quantite) {
-              alert.setMessage("la quantité sélectionnée est supérieure à la quantité en stock")
+          text: 'Suivant',
+          handler: prix => {
+            if(!prix) {
               return false;
             }
-            article.prix = data.prix;
-            article.quantite = data.quantite;
-            article.prix_total = data.prix * data.quantite;
-            this.selectedArticles.push(article);
-            this.articles = this.articles.filter((e)=> e.id_article !== article.id_article);
+            let alertQuantite = this.alertCtrl.create({
+              title : "Quantité",
+              inputs : [{
+               type: 'number',
+               name:'quantite',
+               placeholder: 'Quantité'
+              }],
+              buttons : [
+                {
+                  text: 'Annuler',
+                  role: 'cancel',
+                },
+                {
+                  text: 'Ajouter',
+                  handler: data_quantite => {
+                    console.log(data_quantite);
+                      if(article.quantite < data_quantite.quantite ) {
+                        alertQuantite.setMessage("la quantité sélectionnée est supérieure à la quantité en stock")
+                        return false;
+                      }
+                      if(isNaN(data_quantite.quantite) ) {
+                        return false;
+                      }
+                      article.prix = prix;
+                      article.quantite = data_quantite.quantite;
+                      article.prix_total = prix * data_quantite.quantite;
+                      this.selectedArticles.push(article);
+                      this.filtredArticles = this.filtredArticles.filter((e)=> e.id_article !== article.id_article);
+                   }
+                },
+              ]
+            });
+            alertQuantite.present();
+            return true;
+            
           }
         }
       ]
@@ -196,8 +239,9 @@ export class PanierPage {
 
 
   showReglementAlert() {
+    this.montant_total= this.selectedArticles.map((e) => e.prix_total).reduce((a, b) => a + b, 0);
     let alert = this.alertCtrl.create({
-      title: "Régler la commande",
+      title:  "Total: " + this.montant_total.toLocaleString() + " DH",
       inputs: [
         {
           value: 'espece',
@@ -214,15 +258,25 @@ export class PanierPage {
           label: 'Credit avec avance',
           type: "radio",
         },
+        {
+          value: 'cheque',
+          label: 'Cheque',
+          type: "radio",
+        },
       ],
       buttons: [
         {
           text: 'Régler la commande',
           handler: data => {
-            if(data == 'espece') {
-              this.reglerCommand(data);
+            if(!data) {
+              return false;
+            }
+            if(data == 'cheque') {
+              this.openChequeModal();
             } else if(data == 'credit_avance')  {
               this.displayPromptAvance();
+            } else {
+              this.reglerCommand(data);
             }
             
           }
@@ -239,21 +293,34 @@ export class PanierPage {
     alert.present();
   }
 
-  reglerCommand(type,avance?) {
-
-    let montant_total = this.selectedArticles.map((e) => e.prix_total).reduce((a, b) => a + b, 0);
+  reglerCommand(type,avance?,image?) {
+    let reste = 0, status = 0;
+    if(type == 'credit_avance') {
+      reste  = this.montant_total - avance;
+    } else if(type == 'credit') {
+      reste = this.montant_total;
+    } else {
+      status = 1;
+    }
+    
     let post_data = {
       type_paiement : type,
       libelle: (type == "credit_avance") ? "Credit avec avance" : type,
-      montant : montant_total,
+      montant : this.montant_total,
       command_id : this.command.id,
-      reste : 0,
+      reste : reste,
       selectedArticles : this.selectedArticles,
       avance : avance,
+      image : image,
+      status : status,
     }
 
     this.authService.post_request("command/add",{data : post_data}).then(()=>{
-      console.log("dsds");
+      this.selectedArticles = [];
+      this.command = null;
+      this.slides.lockSwipes(false);
+      this.slides.slideTo(0);
+      this.slides.lockSwipes(true);
     }).then(()=>{
       this.authService.hideLoading();
     })
@@ -271,7 +338,7 @@ export class PanierPage {
       ],
       buttons: [
         {
-          text: 'Régler la commande',
+          text: "Régler la commande",
           handler: data => {
             if(!data.avance) {
               return false;
@@ -294,16 +361,8 @@ export class PanierPage {
   openChequeModal(){
     let chequeModal = this.modalCtrl.create(ChequeModalPage);
     chequeModal.onDidDismiss(data => {
-      if(data.base_64) {
-          let post_data = {
-            "base_64" : data.base_64
-          };  
-          this.authService.post_request("upload",post_data).then((response:any)=> {
-           
-              
-          }).then(()=>{
-            this.authService.hideLoading();
-          });
+      if(data) {
+        this.reglerCommand("cheque",null,data.base_64);
       }
 
     });

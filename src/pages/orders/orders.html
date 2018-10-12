@@ -1,0 +1,41 @@
+<!--
+  Generated template for the OrdersPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title>Commandes</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+
+<ion-content >
+    <h6 text-center>Filtrer la list des commandes</h6>
+    <ion-row flex-nowrap>
+        <span [class.selected]="filter_status=='all'" (click)="filter_orders('all')">Tous</span>
+        <span [class.selected]="filter_status=='day'" (click)="filter_orders('day')">Jour</span>
+        <span [class.selected]="filter_status=='month'" (click)="filter_orders('month')">Mois</span>
+        <span [class.selected]="filter_status=='year'" (click)="filter_orders('year')">Année</span>
+
+    </ion-row>
+    <ion-list>
+      <h6 padding>({{filtredOrders.length}}) Commandes</h6>
+      <ion-item *ngFor="let order of filtredOrders" (click)="order.is_viseted == 1  && openOrderDetails(order.id_commande)">
+        <h2>Client :  {{order.nom}}</h2>
+        <p>Num commande :  {{order.id_commande}}</p>
+        <p>Date : {{order.date_commande}}</p>
+        <ion-badge item-end *ngIf="order.is_viseted == 1 else cancelled"> Terminé </ion-badge>
+        <ng-template #cancelled> <ion-badge color="danger" item-end > Annulé </ion-badge>  </ng-template >
+      </ion-item>
+    </ion-list>
+
+    <ion-infinite-scroll (ionInfinite)="doInfinite($event)" loadingSpinner="bubbles">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+      
+</ion-content>

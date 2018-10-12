@@ -1,3 +1,11 @@
 page-cheque-modal {
-
+    .scroll-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .btn-close {
+        position: absolute;
+          top: 30px;
+    }
 }

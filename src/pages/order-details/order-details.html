@@ -1,0 +1,40 @@
+
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title>Détails de la commande</ion-title>
+    <ion-buttons end>
+        <button ion-button icon-only (click)="closeModal()">
+            <ion-icon item-right name="ios-close-outline"></ion-icon>
+        </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content >
+    <ion-list>
+        <ng-container *ngIf="paiement" >
+            <ion-list-header>
+                Paiement
+              </ion-list-header>
+              <ion-item>Type paiement : <span class="p-list">{{paiement.libelle}} </span>   </ion-item>
+              <ion-item>Date paiement :  <span class="p-list">{{paiement.date_paiement}} </span></ion-item>
+              <ion-item>Montant:  <span class="p-list">{{paiement.montant.toLocaleString()}}  DH</span></ion-item>
+              <ion-item *ngIf="paiement.photo">Photo cheque :  <img [src]="paiement.photo" style="display: block;" > </ion-item>      
+        </ng-container>
+        <ng-container *ngIf="articles.length" >
+            <ion-list-header>
+                Articles
+            </ion-list-header>
+            <ion-item *ngFor="let article of articles" > 
+              <h2>{{article.designation}} </h2>
+              <p>
+                prix : {{article.prix_vente.toLocaleString()}} DH <br>
+                Quantite : {{article.quantite}} 
+              </p>
+            </ion-item>
+        </ng-container>
+    </ion-list>
+</ion-content>

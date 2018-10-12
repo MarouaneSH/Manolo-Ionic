@@ -116,7 +116,7 @@
         <ion-slide >
             <h3 class="category_title" ion-center>Sélectionner des articles</h3>
              <ion-list>
-                <ion-item *ngFor="let article of articles">
+                <ion-item *ngFor="let article of filtredArticles">
                     <h2>{{article.designation}} </h2>
                     <p>quantité en stock :  {{article.quantite}} </p>
                     <button ion-button item-end small outline (click)="addArticle(article)"><ion-icon name="md-add"></ion-icon> </button>

@@ -1,0 +1,23 @@
+page-orders {
+ .row {
+    background: #3a88ff;
+    padding: 14px;
+    align-items: center;
+    justify-content: center;
+    color: white;
+ }
+ h6 {
+    background: #3a88ff;
+    color: white;padding: 5px 10px;
+    margin: 0;
+    font-size: 12px;
+ }
+ .row span {
+     padding: 0 10px;
+ }
+  .selected {
+    background: white;
+    color: #488aff;
+    border-radius: 16px;
+  }
+}

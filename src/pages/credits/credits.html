@@ -1,0 +1,36 @@
+<!--
+  Generated template for the CreditsPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title>Liste des credits</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+    <ion-list>
+        <ion-row padding class="search">
+            <span>Chercher par client</span>
+            <ion-select [(ngModel)]="searchClient" (ionChange)="filterCredits($event)">
+              <ion-option value="all">Tous</ion-option>
+              <ion-option *ngFor="let client of listClient" [value]="client.cin">{{client.nom}} </ion-option>
+            </ion-select>
+        </ion-row>
+        <h6 padding>({{credits.length}}) Credits</h6>
+        <ion-item *ngFor="let credit of filtredCredits" >
+          <h2>Client :  {{credit.nom}}</h2>
+          <h2>Adresse :  {{credit.adresse}}</h2>
+          <p>Num commande :  {{credit.id_commande}}</p>
+          <p>Type de paiement : {{credit.libelle}}</p>
+          <p>Date commande : {{credit.date_commande}}</p>
+          <p>Montant: {{credit.montant}} DH</p>
+          <p>reste: {{credit.reste}} DH</p>
+        </ion-item>
+      </ion-list>
+</ion-content>

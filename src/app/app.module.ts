@@ -21,8 +21,12 @@ import { Camera } from '@ionic-native/camera';
 import { CameraMock } from '@ionic-native-mocks/camera';
 
 import { BarcodeModalPage } from '../pages/barcode-modal/barcode-modal';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule,HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ChequeModalPage } from '../pages/cheque-modal/cheque-modal';
+import { OrdersPage } from '../pages/orders/orders';
+import { OrderDetailsPage } from '../pages/order-details/order-details';
+import { InterceptorProvider } from '../providers/interceptor/interceptor';
+import { CreditsPage } from '../pages/credits/credits';
 
 @NgModule({
   declarations: [
@@ -34,7 +38,11 @@ import { ChequeModalPage } from '../pages/cheque-modal/cheque-modal';
     ProfilePage,
     PanierPage,
     BarcodeModalPage,
-    ChequeModalPage
+    ChequeModalPage,
+    OrdersPage,
+    OrderDetailsPage,
+    CreditsPage
+
   ],
   imports: [
     BrowserModule,
@@ -53,7 +61,10 @@ import { ChequeModalPage } from '../pages/cheque-modal/cheque-modal';
     ProfilePage,
     PanierPage,
     BarcodeModalPage,
-    ChequeModalPage
+    ChequeModalPage,
+    OrdersPage,
+    OrderDetailsPage,
+    CreditsPage
   ],
   providers: [
     StatusBar,
@@ -64,6 +75,7 @@ import { ChequeModalPage } from '../pages/cheque-modal/cheque-modal';
     { provide: BarcodeScanner, useClass: BarcodeScannerMock },
     Camera,
     { provide: Camera, useClass: CameraMock },
+    { provide: HTTP_INTERCEPTORS, useClass: InterceptorProvider, multi: true },
     
 
   ]
