@@ -21,6 +21,7 @@ export class PanierPage {
   selectedArticles = [];
   showSlected = true;
   montant_total = 0;
+  promos = [];
   @ViewChild(Slides) slides: Slides;
 
   constructor(public navCtrl: NavController, 
@@ -40,9 +41,12 @@ export class PanierPage {
       this.authService.hideLoading();
     })
     //test
-    // this.openPanierModal();
-    // this.selectedArticles = JSON.parse('[{"id_article":5,"designation":"pepsi 33cl","quantite":"23","seuil_alert":100,"code_fk_fournisseur":1,"code_fk_sous_categorie":3,"code_fk_taxe":null,"prix":"232","prix_total":5336},{"id_article":6,"designation":"pepsi 0.5cl","quantite":"232","seuil_alert":100,"code_fk_fournisseur":1,"code_fk_sous_categorie":3,"code_fk_taxe":null,"prix":"23","prix_total":5336},{"id_article":7,"designation":"pepsi 1L","quantite":"23","seuil_alert":100,"code_fk_fournisseur":1,"code_fk_sous_categorie":3,"code_fk_taxe":null,"prix":"23","prix_total":529}]');
-  }
+     this.openPanierModal();
+     this.selectedArticles.push(JSON.parse('{"type_mouvement":"charge","id_mouvement_charge":4,"date_mouvement":"2018-10-14 00:00:00","quantite":"10","code_fk_article":1,"code_fk_charge":6,"id_article":1,"designation":"valencia 1l","seuil_alert":50,"code_fk_fournisseur":1,"code_fk_sous_categorie":1,"code_fk_taxe":null,"id_prix_article":1,"libelle":"prix generale","prix_vente":11,"prix":11,"prix_total":110}')) ;
+     this.articles = this.selectedArticles;
+     this.promos = JSON.parse('[{"id_promotion":10,"libelle":"promo special","qte_cadeau":2,"qte_min":10,"code_fk_article":1,"code_fk_client":"2"},{"id_promotion":12,"libelle":"promo printemps","qte_cadeau":1,"qte_min":10,"code_fk_article":1,"code_fk_client":null}]');
+     this.addArticle(this.selectedArticles[0]);
+    }
 
 
   openPanierModal() {
@@ -136,9 +140,9 @@ export class PanierPage {
   getArticles(sous_category) {
     this.authService.post_request("articles", {sous_category : sous_category}).then((response:any)=> {
       if(response.articles != null) {
+        this.promos = response.promos;
         this.articles = response.articles ;
         this.filtredArticles = Object.values((this.articles.reduce((acc,cur)=>Object.assign(acc,{[cur.id_article]:cur}),{})));
-        console.log(this.articles);
         if(this.selectedArticles.length) {
           this.articles =  this.articles.filter(value => {
             return !this.selectedArticles.map((e)=> e.id_article ).includes(value.id_article);
@@ -191,6 +195,17 @@ export class PanierPage {
             if(!prix) {
               return false;
             }
+
+            let article_promos = [];
+            if(this.promos.length ) {
+              article_promos = this.promos.filter((e)=> e.code_fk_article === article.id_article && e.libelle == "promo printemps" || e.code_fk_article === article.id_article && e.libelle == "promo special" &&  e.code_fk_client == this.command.client.cin);
+              console.log(article_promos);
+              console.log(this.command.client.cin);
+              if(article_promos.length == 2) {
+
+              }
+            }
+
             let alertQuantite = this.alertCtrl.create({
               title : "Quantité",
               inputs : [{
@@ -206,7 +221,6 @@ export class PanierPage {
                 {
                   text: 'Ajouter',
                   handler: data_quantite => {
-                    console.log(data_quantite);
                       if(article.quantite < data_quantite.quantite ) {
                         alertQuantite.setMessage("la quantité sélectionnée est supérieure à la quantité en stock")
                         return false;
@@ -218,6 +232,7 @@ export class PanierPage {
                       article.quantite = data_quantite.quantite;
                       article.prix_total = prix * data_quantite.quantite;
                       this.selectedArticles.push(article);
+                      console.log(article);
                       this.filtredArticles = this.filtredArticles.filter((e)=> e.id_article !== article.id_article);
                    }
                 },
@@ -293,7 +308,7 @@ export class PanierPage {
     alert.present();
   }
 
-  reglerCommand(type,avance?,image?) {
+  reglerCommand(type,avance?,image?,date_cheque?) {
     let reste = 0, status = 0;
     if(type == 'credit_avance') {
       reste  = this.montant_total - avance;
@@ -313,6 +328,7 @@ export class PanierPage {
       avance : avance,
       image : image,
       status : status,
+      date_cheque : date_cheque
     }
 
     this.authService.post_request("command/add",{data : post_data}).then(()=>{
@@ -362,7 +378,7 @@ export class PanierPage {
     let chequeModal = this.modalCtrl.create(ChequeModalPage);
     chequeModal.onDidDismiss(data => {
       if(data) {
-        this.reglerCommand("cheque",null,data.base_64);
+        this.reglerCommand("cheque",null,data.base_64,data.date_cheque);
       }
 
     });

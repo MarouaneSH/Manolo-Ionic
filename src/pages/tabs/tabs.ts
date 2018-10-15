@@ -6,6 +6,7 @@ import { ProfilePage } from '../profile/profile';
 import { PanierPage } from '../panier/panier';
 import { OrdersPage } from '../orders/orders';
 import { CreditsPage } from '../credits/credits';
+import { ChequeModalPage } from '../cheque-modal/cheque-modal';
 
 @Component({
   templateUrl: 'tabs.html'
