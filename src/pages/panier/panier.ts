@@ -6,7 +6,7 @@ import { AlertController } from 'ionic-angular';
 import { Slides } from 'ionic-angular';
 import { ChequeModalPage } from '../cheque-modal/cheque-modal';
 
-@IonicPage()
+
 @Component({
   selector: 'page-panier',
   templateUrl: 'panier.html',

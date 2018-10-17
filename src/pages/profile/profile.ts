@@ -6,7 +6,7 @@ import { Storage } from '@ionic/storage';
 import { LoginPage } from '../login/login';
 
 
-@IonicPage()
+
 @Component({
   selector: 'page-profile',
   templateUrl: 'profile.html',

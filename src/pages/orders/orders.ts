@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams,ModalController } from 'ionic-angul
 import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
 import { OrderDetailsPage } from '../order-details/order-details';
 
-@IonicPage()
+
 @Component({
   selector: 'page-orders',
   templateUrl: 'orders.html',

@@ -6,7 +6,7 @@ import {Validators, FormBuilder, FormGroup } from '@angular/forms';
 
 
 
-@IonicPage()
+
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html',

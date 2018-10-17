@@ -3,7 +3,7 @@ import { IonicPage, NavController, ViewController } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 
-@IonicPage()
+
 @Component({
   selector: 'page-barcode-modal',
   templateUrl: 'barcode-modal.html',

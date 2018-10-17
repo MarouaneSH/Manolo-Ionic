@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angul
 import { Camera, CameraOptions } from '@ionic-native/camera';
 
 
-@IonicPage()
+
 @Component({
   selector: 'page-cheque-modal',
   templateUrl: 'cheque-modal.html',

@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
 
 
-@IonicPage()
+
 @Component({
   selector: 'page-credits',
   templateUrl: 'credits.html',
