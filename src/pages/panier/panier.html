@@ -46,8 +46,10 @@
                 <h2>{{article.designation}} </h2>
                 <p>
                     Prix :  {{article.prix}} DH <br>
-                    Quantité :  {{article.quantite}} <br>
-                    <span class="total_price">Prxi total : {{article.prix_total}} DH</span>
+                    Quantité :  {{article.current_quantite}} <br>
+                    <span class="total_price">Prxi total : {{article.prix_total}} DH</span> <br>
+                    <span *ngIf="article.has_promos" class="total_price">Quantité cadeau : {{article.qte_cadeau}} </span>
+
                 </p>
                 
                 <button ion-button item-end small outline color="danger"
@@ -63,9 +65,9 @@
 
 
     <ion-slides>
-        <ion-slide style="align-items: center;">
-            <div *ngIf="!command else choose_article">
-                <button ion-button block (click)="openPanierModal()"  > 
+        <ion-slide>
+            <div  padding *ngIf="!command else choose_article">
+                <button round  class="btn-command" ion-button block (click)="openPanierModal()"  > 
                     <div padding>
                         <ion-icon name="md-cart"></ion-icon>
                         <label>Passer une commande</label>
@@ -118,7 +120,7 @@
              <ion-list>
                 <ion-item *ngFor="let article of filtredArticles" >
                     <h2>{{article.designation}} </h2>
-                    <p>quantité en stock :  {{article.quantite}} </p>
+                    <p>quantité en stock :  {{article.current_quantite}} </p>
                     <button ion-button item-end small outline (click)="addArticle(article)"><ion-icon name="md-add"></ion-icon> </button>
                 </ion-item>  
                 <p *ngIf="filtredArticles.length == 0">Aucun article trouvé</p>

@@ -15,7 +15,10 @@ page-panier {
         margin-bottom: 33px;
     }
     .swiper-slide{
-        align-items: flex-start;
+        align-items: flex-start !important;
+    }
+    .btn-command {
+        margin-top: 30vh;
     }
     .arrow-toggle{
         padding: 0;

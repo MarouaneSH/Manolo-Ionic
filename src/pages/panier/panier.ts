@@ -41,11 +41,11 @@ export class PanierPage {
       this.authService.hideLoading();
     })
     //test
-     this.openPanierModal();
-     this.selectedArticles.push(JSON.parse('{"type_mouvement":"charge","id_mouvement_charge":4,"date_mouvement":"2018-10-14 00:00:00","quantite":"10","code_fk_article":1,"code_fk_charge":6,"id_article":1,"designation":"valencia 1l","seuil_alert":50,"code_fk_fournisseur":1,"code_fk_sous_categorie":1,"code_fk_taxe":null,"id_prix_article":1,"libelle":"prix generale","prix_vente":11,"prix":11,"prix_total":110}')) ;
-     this.articles = this.selectedArticles;
-     this.promos = JSON.parse('[{"id_promotion":10,"libelle":"promo special","qte_cadeau":2,"qte_min":10,"code_fk_article":1,"code_fk_client":"2"},{"id_promotion":12,"libelle":"promo printemps","qte_cadeau":1,"qte_min":10,"code_fk_article":1,"code_fk_client":null}]');
-     this.addArticle(this.selectedArticles[0]);
+    //  this.openPanierModal();
+    //  this.selectedArticles.push(JSON.parse('{"type_mouvement":"charge","id_mouvement_charge":4,"date_mouvement":"2018-10-14 00:00:00","quantite":"10","code_fk_article":1,"code_fk_charge":6,"id_article":1,"designation":"valencia 1l","seuil_alert":50,"code_fk_fournisseur":1,"code_fk_sous_categorie":1,"code_fk_taxe":null,"id_prix_article":1,"libelle":"prix generale","prix_vente":11,"prix":11,"prix_total":110}')) ;
+    //  this.articles = this.selectedArticles;
+    //  this.promos = JSON.parse('[{"id_promotion":10,"libelle":"promo special","qte_cadeau":2,"qte_min":10,"code_fk_article":1,"code_fk_client":"2"},{"id_promotion":12,"libelle":"promo printemps","qte_cadeau":1,"qte_min":10,"code_fk_article":1,"code_fk_client":null}]');
+    //  this.addArticle(this.selectedArticles[0]);
     }
 
 
@@ -199,15 +199,20 @@ export class PanierPage {
             let article_promos = [];
             if(this.promos.length ) {
               article_promos = this.promos.filter((e)=> e.code_fk_article === article.id_article && e.libelle == "promo printemps" || e.code_fk_article === article.id_article && e.libelle == "promo special" &&  e.code_fk_client == this.command.client.cin);
-              console.log(article_promos);
-              console.log(this.command.client.cin);
               if(article_promos.length == 2) {
-
-              }
+                article_promos = article_promos.filter((e) => e.libelle == "promo special");
+              } 
             }
 
+            let subtitle = "", has_promos = false;
+            //check if this article have a promo
+            if(article_promos.length) {
+              has_promos = true;
+              subtitle = `sur ${article_promos[0].qte_min}  articles en stock, vous recevrez ${article_promos[0].qte_cadeau} articles gratuits `;
+            } 
             let alertQuantite = this.alertCtrl.create({
               title : "Quantité",
+              subTitle : subtitle,
               inputs : [{
                type: 'number',
                name:'quantite',
@@ -221,7 +226,7 @@ export class PanierPage {
                 {
                   text: 'Ajouter',
                   handler: data_quantite => {
-                      if(article.quantite < data_quantite.quantite ) {
+                      if(article.current_quantite < data_quantite.quantite ) {
                         alertQuantite.setMessage("la quantité sélectionnée est supérieure à la quantité en stock")
                         return false;
                       }
@@ -229,8 +234,16 @@ export class PanierPage {
                         return false;
                       }
                       article.prix = prix;
-                      article.quantite = data_quantite.quantite;
+                      article.current_quantite = data_quantite.quantite;
                       article.prix_total = prix * data_quantite.quantite;
+                      if(has_promos) {
+                        //check if article has the min quantite to profit from promotion
+                        if(data_quantite.quantite >= article_promos[0].qte_min) {
+                          article.has_promos = true;
+                          article.qte_cadeau = article_promos[0].qte_cadeau;
+                          console.log("has promos");
+                        }
+                      }
                       this.selectedArticles.push(article);
                       console.log(article);
                       this.filtredArticles = this.filtredArticles.filter((e)=> e.id_article !== article.id_article);
