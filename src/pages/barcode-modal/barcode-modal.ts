@@ -18,7 +18,7 @@ export class BarcodeModalPage {
   ionViewDidLoad() {
 
     this.barcodeScanner.scan().then(barcodeData => {
-        barcodeData.text = "2";
+        // barcodeData.text = "2";
         this.viewCtrl.dismiss(barcodeData);
     }).catch(err => {
         console.log('Error', err);
