@@ -52,6 +52,7 @@ export class PanierPage {
   openPanierModal() {
     let panierModal = this.modalCtrl.create(BarcodeModalPage);
     panierModal.onDidDismiss(data => {
+      if(!data.text) return;
       let post_data = {
         "id_client" : data.text
       };  
