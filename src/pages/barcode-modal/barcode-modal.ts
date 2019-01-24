@@ -48,7 +48,7 @@ export class BarcodeModalPage {
         {
           text: 'Save',
           handler: data => {
-             this.viewCtrl.dismiss(data.code);
+             this.viewCtrl.dismiss({text : data.code});
           }
         }
       ]
