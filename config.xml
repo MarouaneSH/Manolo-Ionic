@@ -20,6 +20,11 @@
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
     <platform name="android">
+        <hook src="hooks/patch-android-studio-check.js" type="before_plugin_install" />
+        <hook src="hooks/patch-android-studio-check.js" type="before_plugin_add" />
+        <hook src="hooks/patch-android-studio-check.js" type="before_build" />
+        <hook src="hooks/patch-android-studio-check.js" type="before_run" />
+        <hook src="hooks/patch-android-studio-check.js" type="before_plugin_rm" />
         <allow-intent href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
         <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
@@ -90,6 +95,8 @@
     <plugin name="phonegap-plugin-barcodescanner" spec="^8.0.0">
         <variable name="ANDROID_SUPPORT_V4_VERSION" value="27.+" />
     </plugin>
+    <plugin name="ca-cleversolutions-zebraprinter" spec="0.0.3" />
     <engine name="browser" spec="5.0.4" />
-    <engine name="android" spec="7.0.0" />
+    <engine name="android" spec="^7.1.4" />
+    <plugin name="cordova-plugin-printer" spec="^0.7.3" />
 </widget>

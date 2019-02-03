@@ -28,6 +28,8 @@ import { OrderDetailsPage } from '../pages/order-details/order-details';
 import { InterceptorProvider } from '../providers/interceptor/interceptor';
 import { CreditsPage } from '../pages/credits/credits';
 
+import { ZebraPrinter } from 'ca-cleversolutions-zebraprinter/native';
+import { Printer } from '@ionic-native/printer';
 @NgModule({
   declarations: [
     MyApp,
@@ -67,6 +69,8 @@ import { CreditsPage } from '../pages/credits/credits';
     CreditsPage
   ],
   providers: [
+    Printer,
+    ZebraPrinter,
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},

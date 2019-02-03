@@ -5,6 +5,8 @@ import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
 import { AlertController } from 'ionic-angular';
 import { Slides } from 'ionic-angular';
 import { ChequeModalPage } from '../cheque-modal/cheque-modal';
+import { ZebraPrinter } from 'ca-cleversolutions-zebraprinter/native';
+import { Printer } from '@ionic-native/printer';
 
 
 @Component({
@@ -28,10 +30,23 @@ export class PanierPage {
               public navParams: NavParams,
               public modalCtrl: ModalController,
               public authService:AuthServiceProvider,
-              private alertCtrl: AlertController) {
+              private alertCtrl: AlertController,
+              protected zebraPrinter:ZebraPrinter,
+              private printer: Printer) {
+                this.discover();
   }
 
-
+   discover(){
+     this.printer.pick().then((data)=>{
+       console.log(data);
+     });
+    // console.log("Now Discover");
+    // this.zebraPrinter.discover().then(result => {
+    //   console.log(result);
+    // }).catch(err => {
+    //   console.error(err);
+    // });
+  }
   ionViewDidLoad() {
     this.slides.lockSwipes(true);
     //fetch categories
