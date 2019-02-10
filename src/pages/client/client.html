@@ -1,0 +1,28 @@
+<!--
+  Generated template for the ClientPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title>Liste des clients</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <ion-row margin-top	 justify-content-center>
+    <button (click)="scan()" ion-button round color="primary">Ajouter un client</button>
+  </ion-row>
+    <ion-list>
+        <h6 padding>Liste des clients</h6>
+        <ion-item  *ngFor="let client of clients">
+          <h2> {{client.nom}} {{client.prenom}} </h2>
+          <span class="lead_list">{{client.telephone}} </span>
+          <span class="lead_list">{{client.adresse}} </span>
+        </ion-item>
+      </ion-list>
+</ion-content>
