@@ -7,6 +7,7 @@ import { PanierPage } from '../panier/panier';
 import { OrdersPage } from '../orders/orders';
 import { CreditsPage } from '../credits/credits';
 import { ChequeModalPage } from '../cheque-modal/cheque-modal';
+import { ClientPage } from '../client/client';
 
 @Component({
   templateUrl: 'tabs.html'
@@ -17,6 +18,7 @@ export class TabsPage {
   tab2Root = PanierPage;
   tab3Root = OrdersPage;
   tab4Root = CreditsPage;
+  tab5Root = ClientPage;
 
   constructor() {
 
