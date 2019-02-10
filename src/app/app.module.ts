@@ -30,6 +30,7 @@ import { CreditsPage } from '../pages/credits/credits';
 
 import { ZebraPrinter } from 'ca-cleversolutions-zebraprinter/native';
 import { Printer } from '@ionic-native/printer';
+import { ClientPage } from '../pages/client/client';
 @NgModule({
   declarations: [
     MyApp,
@@ -43,8 +44,8 @@ import { Printer } from '@ionic-native/printer';
     ChequeModalPage,
     OrdersPage,
     OrderDetailsPage,
-    CreditsPage
-
+    CreditsPage,
+    ClientPage
   ],
   imports: [
     BrowserModule,
@@ -66,7 +67,8 @@ import { Printer } from '@ionic-native/printer';
     ChequeModalPage,
     OrdersPage,
     OrderDetailsPage,
-    CreditsPage
+    CreditsPage,
+    ClientPage
   ],
   providers: [
     Printer,
@@ -76,7 +78,7 @@ import { Printer } from '@ionic-native/printer';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthServiceProvider,
     BarcodeScanner,
-    // { provide: BarcodeScanner, useClass: BarcodeScannerMock },
+    { provide: BarcodeScanner, useClass: BarcodeScannerMock },
     Camera,
     // { provide: Camera, useClass: CameraMock },
     { provide: HTTP_INTERCEPTORS, useClass: InterceptorProvider, multi: true },
