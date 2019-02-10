@@ -24,6 +24,9 @@ export class PanierPage {
   showSlected = true;
   montant_total = 0;
   promos = [];
+  myDate = null;
+
+  
   @ViewChild(Slides) slides: Slides;
 
   constructor(public navCtrl: NavController, 
@@ -33,13 +36,12 @@ export class PanierPage {
               private alertCtrl: AlertController,
               protected zebraPrinter:ZebraPrinter,
               private printer: Printer) {
-                this.discover();
   }
 
    discover(){
-     this.printer.pick().then((data)=>{
-       console.log(data);
-     });
+    this.printer.pick().then((data)=>{
+      console.log(data);
+    })
     // console.log("Now Discover");
     // this.zebraPrinter.discover().then(result => {
     //   console.log(result);
@@ -177,23 +179,31 @@ export class PanierPage {
 
   addArticle(article) {
     //check occurence article
-    let occurence = this.articles.filter((a)=> a.id_article == article.id_article);
+    // let occurence = this.articles.filter((a)=> a.id_article == article.id_article);
+    // if(occurence.length == 1) {
+    //   inputs.push({
+    //       value: article.prix_vente,
+    //       label: `${article.prix_vente} DH (${article.libelle})`,
+    //       type: "radio",
+    //   })
+    // } else {
+    //   occurence.forEach(element => {
+    //       inputs.push({
+    //         value: element.prix_vente,
+    //         label: `${element.prix_vente} DH (${element.libelle})`,
+    //         type: "radio",
+    //     })
+    //   });
+    // }
+
     let inputs = [];
-    if(occurence.length == 1) {
-      inputs.push({
-          value: article.prix_vente,
-          label: `${article.prix_vente} DH (${article.libelle})`,
-          type: "radio",
-      })
-    } else {
-      occurence.forEach(element => {
-          inputs.push({
-            value: element.prix_vente,
-            label: `${element.prix_vente} DH (${element.libelle})`,
-            type: "radio",
-        })
-      });
-    }
+    inputs.push({
+        value: article.prix_vente,
+        label: `${article.prix_vente} DH`,
+        type: "radio",
+        checked : true,
+    })
+
     let alert = this.alertCtrl.create({
       title: article.designation,
       subTitle: "Selectionner un prix",
@@ -215,7 +225,9 @@ export class PanierPage {
 
             let article_promos = [];
             if(this.promos.length ) {
-              article_promos = this.promos.filter((e)=> e.code_fk_article === article.id_article && e.libelle == "promo printemps" || e.code_fk_article === article.id_article && e.libelle == "promo special" &&  e.code_fk_client == this.command.client.cin);
+              console.log("dsds");
+              console.log(this.promos);
+              article_promos = this.promos.filter((e)=> e.code_fk_article === article.id_article && e.libelle == "promo printemps" || e.code_fk_article === article.id_article && e.is_special == 1 &&  e.code_fk_client == this.command.client.cin);
               if(article_promos.length == 2) {
                 article_promos = article_promos.filter((e) => e.libelle == "promo special");
               } 
