@@ -21,7 +21,14 @@
         <span [class.selected]="filter_status=='day'" (click)="filter_orders('day')">Jour</span>
         <span [class.selected]="filter_status=='month'" (click)="filter_orders('month')">Mois</span>
         <span [class.selected]="filter_status=='year'" (click)="filter_orders('year')">Année</span>
-
+    </ion-row>
+    <ion-row>
+        <span style="text-align:center"> 
+            <ion-row style="position:relative">
+                <ion-datetime (ionChange)="changeFilterDate($event)" class="date_picker" placeholder="Date personnalisée" displayFormat="MM/DD/YYYY" [(ngModel)]="selectedDate"></ion-datetime>
+                <button *ngIf="selectedDate" (click)="resetFilter()"  ion-button color="danger" small>Annuler</button>
+            </ion-row>
+          </span>
     </ion-row>
     <ion-list>
       <h6 padding>({{filtredOrders.length}}) Commandes</h6>

@@ -15,6 +15,8 @@ export class OrdersPage {
   filter_status = 'all';
   page = 1;
   maxPage = null;
+  selectedDate = null;
+
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
               public authService:AuthServiceProvider,
@@ -59,6 +61,12 @@ export class OrdersPage {
       this.filtredOrders = this.orders.filter((order)=>  { 
         return new Date(order.date_commande).getFullYear() ==  new Date().getFullYear();
       });
+    } else if(filter == 'custom') {
+      console.log(this.orders[0].date_commande);
+      console.log(this.selectedDate);
+      this.filtredOrders = this.orders.filter((order)=>  { 
+        return new Date(order.date_commande).getTime() ==  new Date(this.selectedDate).getTime();
+      });
     } else {
       this.filtredOrders = this.orders;
     }
@@ -75,6 +83,20 @@ export class OrdersPage {
     if (this.page === this.maxPage) {
       infiniteScroll.enable(false);
     }
+  }
+
+  resetFilter() {
+    console.log("reset");
+    this.selectedDate = null;
+    setTimeout(() => {
+      this.filter_orders("all");
+    }, 100);
+  }
+
+  changeFilterDate(ev) {
+      if(ev) {
+        this.filter_orders('custom');
+      }
   }
 
 }
