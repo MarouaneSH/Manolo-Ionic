@@ -16,6 +16,11 @@
 <ion-content >
     <ion-list>
         <ng-container *ngIf="paiement" >
+           <div style="text-align:center;margin-top: 20px">
+              <button round ion-button small  color="secondary" (click)="print()">
+                  Imprimer
+             </button>
+           </div>
             <ion-list-header>
                 Paiement
               </ion-list-header>
