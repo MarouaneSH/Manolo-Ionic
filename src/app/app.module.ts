@@ -31,6 +31,12 @@ import { CreditsPage } from '../pages/credits/credits';
 import { ZebraPrinter } from 'ca-cleversolutions-zebraprinter/native';
 import { Printer } from '@ionic-native/printer';
 import { ClientPage } from '../pages/client/client';
+import { PrintingPage } from '../pages/printing/printing';
+
+import { BluetoothSerial } from '@ionic-native/bluetooth-serial';
+import { PrintingListModalPage } from '../pages/printing-list-modal/printing-list-modal';
+import { PrinterProvider } from '../providers/printer/printer';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -45,7 +51,9 @@ import { ClientPage } from '../pages/client/client';
     OrdersPage,
     OrderDetailsPage,
     CreditsPage,
-    ClientPage
+    ClientPage,
+    PrintingPage,
+    PrintingListModalPage
   ],
   imports: [
     BrowserModule,
@@ -68,7 +76,9 @@ import { ClientPage } from '../pages/client/client';
     OrdersPage,
     OrderDetailsPage,
     CreditsPage,
-    ClientPage
+    ClientPage,
+    PrintingPage,
+    PrintingListModalPage
   ],
   providers: [
     Printer,
@@ -82,7 +92,8 @@ import { ClientPage } from '../pages/client/client';
     Camera,
     // { provide: Camera, useClass: CameraMock },
     { provide: HTTP_INTERCEPTORS, useClass: InterceptorProvider, multi: true },
-    
+    BluetoothSerial,
+    PrinterProvider,
 
   ]
 })

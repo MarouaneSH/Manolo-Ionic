@@ -21,7 +21,7 @@ export class LoginPage {
               private formBuilder: FormBuilder) {
 
           this.loginForm = this.formBuilder.group({
-            'pseudo' : ['n354235', Validators.required],
+            'pseudo' : ['n344235', Validators.required],
             'password' : ['123456', Validators.required],
           });
   }

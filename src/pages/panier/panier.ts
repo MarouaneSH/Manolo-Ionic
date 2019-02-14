@@ -225,9 +225,7 @@ export class PanierPage {
 
             let article_promos = [];
             if(this.promos.length ) {
-              console.log("dsds");
-              console.log(this.promos);
-              article_promos = this.promos.filter((e)=> e.code_fk_article === article.id_article && e.libelle == "promo printemps" || e.code_fk_article === article.id_article && e.is_special == 1 &&  e.code_fk_client == this.command.client.cin);
+              article_promos = this.promos.filter((e)=> e.code_fk_article === article.id_article && e.is_special == 0 || e.code_fk_article === article.id_article && e.is_special == 1 &&  e.code_fk_client == this.command.client.cin);
               if(article_promos.length == 2) {
                 article_promos = article_promos.filter((e) => e.libelle == "promo special");
               } 
@@ -297,6 +295,8 @@ export class PanierPage {
 
   showReglementAlert() {
     this.montant_total= this.selectedArticles.map((e) => e.prix_total).reduce((a, b) => a + b, 0);
+    console.log(this.montant_total);
+    console.log(this.selectedArticles);
     let alert = this.alertCtrl.create({
       title:  "Total: " + this.montant_total.toLocaleString() + " DH",
       inputs: [
