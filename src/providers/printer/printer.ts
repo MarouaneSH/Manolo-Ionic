@@ -16,7 +16,7 @@ export class PrinterProvider {
 
   selectedPrinter = null;
   articles = [];
-  paiement = [];
+  paiement = null;
   order_id = null;
 
 
@@ -41,18 +41,17 @@ export class PrinterProvider {
   // let quartier = "Quartier : Elhoda".padEnd(24, " ");
   // let date = new Date().toLocaleString().padStart(24, " ");
 
-  let articles = JSON.parse('[{"designation":"valencia 1l","prix_vente":12,"quantite":3},{"designation":"valencia 1l","prix_vente":12,"quantite":2}]');
 
   let articles_list = "";
-  articles.forEach(e => {
+  this.articles.forEach(e => {
     articles_list += e.designation.padEnd(15, " ")  + e.quantite.toString().padStart(3, " ").padEnd(6, " ") + (e.prix_vente + "DH").toString().padStart(4, " ").padEnd(8, " ") + ((e.quantite * e.prix_vente) + "DH").toString().padStart(5, " ").padEnd(12, " ") + "0"+`\r`;
   });
-  let client_name= "Marouane souah";
-  let chauffaur_name = "Mohammed Belo";
-  let quartier_name = "Quartier : Elhoda".padEnd(24, " ");
+  let client_name= this.paiement.nom_client;
+  let chauffaur_name = this.paiement.nom_user;
+  let quartier_name = ("Quartier : "+ this.paiement.libelle).padEnd(24, " ");
   let date = new Date().toLocaleString().padStart(24, " ");
-  let total_net = "Total NET a payer : 60 DH".padStart(45, " ");
-  let type_payment = "Type payment : Cheque".padStart(45, " ");
+  let total_net = `Total NET a payer : ${this.paiement.montant} DH`.padStart(45, " ");
+  let type_payment = `Type payment : ${this.paiement.type_paiement}`.padStart(45, " ");
 let printData =
 `
 -----------------------------------------------\r
