@@ -12,6 +12,7 @@ import { PrintingPage } from '../printing/printing';
 export class OrderDetailsPage {
 
   articles = [];
+  promos = [];
   paiement = null;
   order_id = null;
   constructor(public navCtrl: NavController,public modalCtrl:ModalController, public navParams: NavParams, public authService : AuthServiceProvider) {
@@ -22,6 +23,7 @@ export class OrderDetailsPage {
    this.authService.post_request("orders/"+this.order_id).then((data: any)=>{
      this.articles = data.articles;
      this.paiement = (data.paiement) ? data.paiement[0] : null;
+     this.promos = data.promos;
    }).then(()=>{
      this.authService.hideLoading();
    })
@@ -29,7 +31,7 @@ export class OrderDetailsPage {
 
   print() {
       //1. Open printer select modal
-      let modal=this.modalCtrl.create(PrintingPage , { articles: this.articles, paiement : this.paiement, order_id : this.order_id });
+      let modal=this.modalCtrl.create(PrintingPage , { articles: this.articles, paiement : this.paiement, order_id : this.order_id, promos : this.promos });
       
       //0. Present Modal
       modal.present();

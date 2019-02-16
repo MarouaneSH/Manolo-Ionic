@@ -18,6 +18,7 @@ export class PrinterProvider {
   articles = [];
   paiement = null;
   order_id = null;
+  promos = [];
 
 
   constructor(public http: HttpClient,private btSerial:BluetoothSerial,private nativeStorage: Storage,private alertCtrl:AlertController) {
@@ -44,7 +45,7 @@ export class PrinterProvider {
 
   let articles_list = "";
   this.articles.forEach(e => {
-    articles_list += e.designation.padEnd(15, " ")  + e.quantite.toString().padStart(3, " ").padEnd(6, " ") + (e.prix_vente + "DH").toString().padStart(4, " ").padEnd(8, " ") + ((e.quantite * e.prix_vente) + "DH").toString().padStart(5, " ").padEnd(12, " ") + "0"+`\r`;
+    articles_list += e.designation.padEnd(15, " ")  + e.quantite.toString().padStart(3, " ").padEnd(6, " ") + (e.prix_vente + "DH").toString().padStart(4, " ").padEnd(8, " ") + ((e.quantite * e.prix_vente) + "DH").toString().padStart(5, " ").padEnd(12, " ") + e.promos+`\r`;
   });
   let client_name= this.paiement.nom_client;
   let chauffaur_name = this.paiement.nom_user;
@@ -75,6 +76,7 @@ ${type_payment}\r
 \r      
 \r
 `;
+
 
     return new Promise((resolve,reject)=> {
       this.btSerial.write(printData).then(dataz=>{
