@@ -388,7 +388,7 @@ export class PanierPage {
       this.slides.slideTo(0);
       this.slides.lockSwipes(true);
        //1. Open printer select modal
-       let modal=this.modalCtrl.create(PrintingPage , { articles: data.articles, paiement : data.paiement[0], order_id : this.command.id});
+       let modal=this.modalCtrl.create(PrintingPage , { articles: data.articles, paiement : data.paiement[0], order_id : this.command.id, promos : data.promos});
        this.command = null;
        //0. Present Modal
        modal.present();

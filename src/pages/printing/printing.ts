@@ -25,19 +25,33 @@ export class PrintingPage {
 
   printers = [];
   selectedPrinter = null;
-
+  hidePage = true;
 
   ionViewDidLoad() {
     this.printerProvider.articles = this.navParams.get('articles');
     this.printerProvider.paiement = this.navParams.get('paiement');
-    console.log(this.printerProvider.articles);
-    console.log(this.printerProvider.paiement);
     this.printerProvider.order_id = this.navParams.get('order_id');
+    this.printerProvider.promos = this.navParams.get('promos');
+    this.printerProvider.articles.forEach((article)=> {
+        let promos = this.printerProvider.promos.filter((pr) => pr.code_fk_article == article.id_article);
+        if(promos.length) {
+          article.promos = promos[0].quantite;
+        } else {
+          article.promos = 0;
+        }
+        return article;
+    });
     this.authService.displayLoading();
     this.nativeStorage.get('selectedPrinter').then((data)=> {
       this.selectedPrinter=  data;
       this.printerProvider.selectedPrinter = data;
       this.authService.hideLoading();
+      if(data) {
+        this.print().then(()=> {
+          this.closeModal();
+        });
+      }
+      
     })
    
   }
@@ -71,10 +85,15 @@ export class PrintingPage {
   }
 
   print() {
-    this.authService.displayLoading();
-    this.printerProvider.print().then(()=> {
-      this.authService.hideLoading();
-    });
+    return new Promise((resolve,reject)=> {
+      this.authService.displayLoading();
+      this.printerProvider.print().then(()=> {
+        resolve(true);
+        this.authService.hideLoading();
+      }).catch(()=> {
+        reject(true);
+      });
+    })
   }
 
   closeModal(){
