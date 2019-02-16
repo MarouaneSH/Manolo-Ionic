@@ -30,6 +30,8 @@ export class PrintingPage {
   ionViewDidLoad() {
     this.printerProvider.articles = this.navParams.get('articles');
     this.printerProvider.paiement = this.navParams.get('paiement');
+    console.log(this.printerProvider.articles);
+    console.log(this.printerProvider.paiement);
     this.printerProvider.order_id = this.navParams.get('order_id');
     this.authService.displayLoading();
     this.nativeStorage.get('selectedPrinter').then((data)=> {
@@ -37,6 +39,7 @@ export class PrintingPage {
       this.printerProvider.selectedPrinter = data;
       this.authService.hideLoading();
     })
+   
   }
 
   OpenSearchModal() {
