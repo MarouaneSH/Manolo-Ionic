@@ -7,6 +7,7 @@ import { Slides } from 'ionic-angular';
 import { ChequeModalPage } from '../cheque-modal/cheque-modal';
 import { ZebraPrinter } from 'ca-cleversolutions-zebraprinter/native';
 import { Printer } from '@ionic-native/printer';
+import { PrintingPage } from '../printing/printing';
 
 
 @Component({
@@ -163,6 +164,12 @@ export class PanierPage {
         this.articles = response.articles ;
         this.filtredArticles = Object.values((this.articles.reduce((acc,cur)=>Object.assign(acc,{[cur.id_article]:cur}),{})));
         if(this.selectedArticles.length) {
+          console.log("-----");
+          console.log(this.filtredArticles);
+          console.log(this.selectedArticles);
+          this.filtredArticles = this.filtredArticles.filter((filtred) => {
+               return !this.selectedArticles.filter((selected) => selected.id_article == filtred.id_article).length;
+          });
           this.articles =  this.articles.filter(value => {
             return !this.selectedArticles.map((e)=> e.id_article ).includes(value.id_article);
           });
@@ -197,16 +204,39 @@ export class PanierPage {
     // }
 
     let inputs = [];
+    // inputs.push({
+    //     value: article.prix_vente,
+    //     label: ``,
+    //     type: "radio",
+    //     checked : true,
+    // })
     inputs.push({
-        value: article.prix_vente,
-        label: `${article.prix_vente} DH`,
-        type: "radio",
-        checked : true,
+        type: 'number',
+        name:'quantite',
+        placeholder: 'Quantité'
     })
+
+    let article_promos = [];
+    if(this.promos.length ) {
+      article_promos = this.promos.filter((e)=> e.code_fk_article === article.id_article && e.is_special == 0 || e.code_fk_article === article.id_article && e.is_special == 1 &&  e.code_fk_client == this.command.client.cin);
+      if(article_promos.length == 2) {
+        article_promos = article_promos.filter((e) => e.libelle == "promo special");
+      } 
+    }
+
+    let subtitle = "", has_promos = false;
+    
+    //check if this article have a promo
+    if(article_promos.length) {
+      has_promos = true;
+      subtitle = `sur ${article_promos[0].qte_min}  articles en stock, vous recevrez ${article_promos[0].qte_cadeau} articles gratuits `;
+    } 
+
+
 
     let alert = this.alertCtrl.create({
       title: article.designation,
-      subTitle: "Selectionner un prix",
+      subTitle: `Prix ${article.prix_vente} DH \n <br> ${subtitle}`,
       inputs: inputs,
       buttons: [
         {
@@ -218,67 +248,43 @@ export class PanierPage {
         },
         {
           text: 'Suivant',
-          handler: prix => {
-            if(!prix) {
+          handler: data_quantite => {
+            console.log(data_quantite);
+            if(!data_quantite) {
               return false;
             }
 
-            let article_promos = [];
-            if(this.promos.length ) {
-              article_promos = this.promos.filter((e)=> e.code_fk_article === article.id_article && e.is_special == 0 || e.code_fk_article === article.id_article && e.is_special == 1 &&  e.code_fk_client == this.command.client.cin);
-              if(article_promos.length == 2) {
-                article_promos = article_promos.filter((e) => e.libelle == "promo special");
-              } 
+            if(data_quantite.quantite == "") {
+              alert.setMessage("Vous devez selectionner une quantité");
+              return false;
             }
 
-            let subtitle = "", has_promos = false;
-            //check if this article have a promo
-            if(article_promos.length) {
-              has_promos = true;
-              subtitle = `sur ${article_promos[0].qte_min}  articles en stock, vous recevrez ${article_promos[0].qte_cadeau} articles gratuits `;
-            } 
-            let alertQuantite = this.alertCtrl.create({
-              title : "Quantité",
-              subTitle : subtitle,
-              inputs : [{
-               type: 'number',
-               name:'quantite',
-               placeholder: 'Quantité'
-              }],
-              buttons : [
-                {
-                  text: 'Annuler',
-                  role: 'cancel',
-                },
-                {
-                  text: 'Ajouter',
-                  handler: data_quantite => {
-                      if(article.current_quantite < data_quantite.quantite ) {
-                        alertQuantite.setMessage("la quantité sélectionnée est supérieure à la quantité en stock")
-                        return false;
-                      }
-                      if(isNaN(data_quantite.quantite) ) {
-                        return false;
-                      }
-                      article.prix = prix;
-                      article.current_quantite = data_quantite.quantite;
-                      article.prix_total = prix * data_quantite.quantite;
-                      if(has_promos) {
-                        //check if article has the min quantite to profit from promotion
-                        if(data_quantite.quantite >= article_promos[0].qte_min) {
-                          article.has_promos = true;
-                          article.qte_cadeau = article_promos[0].qte_cadeau;
-                          console.log("has promos");
-                        }
-                      }
-                      this.selectedArticles.push(article);
-                      console.log(article);
-                      this.filtredArticles = this.filtredArticles.filter((e)=> e.id_article !== article.id_article);
-                   }
-                },
-              ]
-            });
-            alertQuantite.present();
+          
+
+            
+          
+
+            if(article.current_quantite < data_quantite.quantite ) {
+              alert.setMessage("la quantité sélectionnée est supérieure à la quantité en stock")
+              return false;
+            }
+            if(isNaN(data_quantite.quantite) ) {
+              return false;
+            }
+            article.prix = article.prix_vente;
+            article.current_quantite = data_quantite.quantite;
+            article.prix_total = article.prix_vente * data_quantite.quantite;
+            if(has_promos) {
+              //check if article has the min quantite to profit from promotion
+              if(data_quantite.quantite >= article_promos[0].qte_min) {
+                article.has_promos = true;
+                article.qte_cadeau = Math.round((data_quantite.quantite * article_promos[0].qte_cadeau) / article_promos[0].qte_min );
+                console.log("has promos");
+              }
+            }
+            this.selectedArticles.push(article);
+            this.filtredArticles = this.filtredArticles.filter((e)=> e.id_article !== article.id_article);
+
             return true;
             
           }
@@ -288,8 +294,10 @@ export class PanierPage {
     alert.present();
   }
 
-  removeArticle(id) {
+  removeArticle(id,sous_category) {
     this.selectedArticles = this.selectedArticles.filter((e)=> e.id_article !== id);
+    this.getArticles(sous_category);
+    
   }
 
 
@@ -373,12 +381,17 @@ export class PanierPage {
       date_cheque : date_cheque
     }
 
-    this.authService.post_request("command/add",{data : post_data}).then(()=>{
+    this.authService.post_request("command/add",{data : post_data}).then((data:any)=>{
       this.selectedArticles = [];
-      this.command = null;
+     
       this.slides.lockSwipes(false);
       this.slides.slideTo(0);
       this.slides.lockSwipes(true);
+       //1. Open printer select modal
+       let modal=this.modalCtrl.create(PrintingPage , { articles: data.articles, paiement : data.paiement[0], order_id : this.command.id});
+       this.command = null;
+       //0. Present Modal
+       modal.present();
     }).then(()=>{
       this.authService.hideLoading();
     })
