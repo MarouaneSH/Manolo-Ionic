@@ -24,7 +24,7 @@
             <ion-list-header>
                 Paiement
               </ion-list-header>
-              <ion-item>Type paiement : <span class="p-list">{{paiement.libelle}} </span>   </ion-item>
+              <ion-item>Type paiement : <span class="p-list">{{paiement.type_paiement}} </span>   </ion-item>
               <ion-item>Date paiement :  <span class="p-list">{{paiement.date_paiement}} </span></ion-item>
               <ion-item>Montant:  <span class="p-list">{{paiement.montant.toLocaleString()}}  DH</span></ion-item>
               <ion-item *ngIf="paiement.photo">Photo cheque :  <img [src]="paiement.photo" style="display: block;" > </ion-item>      

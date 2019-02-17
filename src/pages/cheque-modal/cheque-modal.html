@@ -4,16 +4,23 @@
 
   <ion-navbar color="primary">
     <button  ion-button   (click)="cancel()" >Annuler </button>
+    <ion-buttons end>
+       
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
+
 <ion-content padding>
+    <ion-row>
+        <button  small round *ngIf="base64Image && date_cheque "ion-button color="secondary" (click)="valider()">Valider</button>
+        <button  small round *ngIf="base64Image" ion-button color="danger" (click)="openCamera()">Prendre une autre photo</button>
+      </ion-row>
     <ion-item *ngIf="base64Image">
         <ion-label>Date cheque</ion-label>
         <ion-datetime displayFormat="DD-MM-YYYY" [(ngModel)]="date_cheque"></ion-datetime>
       </ion-item>
-   <button  *ngIf="base64Image && date_cheque "ion-button color="secondary" (click)="valider()">Valider</button>
-   <button  *ngIf="base64Image" ion-button color="danger" (click)="openCamera()">Prendre une autre photo</button>
+  
    <button  *ngIf="!base64Image" ion-button full round (click)="openCamera()"><ion-icon name="camera"></ion-icon> Prendre une photo du chèque</button>
    <img *ngIf="base64Image" [src]="base64Image" alt="">
 </ion-content>

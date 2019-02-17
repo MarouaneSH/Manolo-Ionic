@@ -277,8 +277,11 @@ export class PanierPage {
             if(has_promos) {
               //check if article has the min quantite to profit from promotion
               if(data_quantite.quantite >= article_promos[0].qte_min) {
-                article.has_promos = true;
-                article.qte_cadeau = Math.round((data_quantite.quantite * article_promos[0].qte_cadeau) / article_promos[0].qte_min );
+                article.has_promos = true; 
+                console.log(data_quantite.quantite);
+                console.log( article_promos[0].qte_min);
+                console.log( article_promos[0].qte_cadeau);
+                article.qte_cadeau = Math.floor(Math.floor((data_quantite.quantite /  article_promos[0].qte_min)) *  article_promos[0].qte_cadeau);
                 console.log("has promos");
               }
             }

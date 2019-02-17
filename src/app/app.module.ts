@@ -88,7 +88,7 @@ import { PrinterProvider } from '../providers/printer/printer';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthServiceProvider,
     BarcodeScanner,
-    { provide: BarcodeScanner, useClass: BarcodeScannerMock },
+    // { provide: BarcodeScanner, useClass: BarcodeScannerMock },
     Camera,
     // { provide: Camera, useClass: CameraMock },
     { provide: HTTP_INTERCEPTORS, useClass: InterceptorProvider, multi: true },

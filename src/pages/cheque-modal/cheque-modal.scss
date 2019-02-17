@@ -1,8 +1,11 @@
 page-cheque-modal {
     .scroll-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+        // display: flex;
+        // flex-direction: column;
+        // justify-content: center;
+    }
+    img {
+        display: block;
     }
     .btn-close {
         position: absolute;
