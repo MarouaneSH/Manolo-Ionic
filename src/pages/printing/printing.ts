@@ -26,29 +26,37 @@ export class PrintingPage {
   printers = [];
   selectedPrinter = null;
   hidePage = true;
+  isEdit = false;
 
   ionViewDidLoad() {
-    this.printerProvider.articles = this.navParams.get('articles');
-    this.printerProvider.paiement = this.navParams.get('paiement');
-    this.printerProvider.order_id = this.navParams.get('order_id');
-    this.printerProvider.promos = this.navParams.get('promos');
-    this.printerProvider.articles.forEach((article)=> {
-        let promos = this.printerProvider.promos.filter((pr) => pr.code_fk_article == article.id_article);
-        if(promos.length) {
-          article.promos = promos[0].quantite;
-        } else {
-          article.promos = 0;
-        }
-        return article;
-    });
+    if(this.navParams.get('isEdit')) {
+      this.isEdit = true;
+    } else {
+      this.printerProvider.articles = this.navParams.get('articles');
+      this.printerProvider.paiement = this.navParams.get('paiement');
+      this.printerProvider.order_id = this.navParams.get('order_id');
+      this.printerProvider.promos = this.navParams.get('promos');
+      this.printerProvider.articles.forEach((article)=> {
+          let promos = this.printerProvider.promos.filter((pr) => pr.code_fk_article == article.id_article);
+          if(promos.length) {
+            article.promos = promos[0].quantite;
+          } else {
+            article.promos = 0;
+          }
+          return article;
+      });
+    }
+    
     this.authService.displayLoading();
     this.nativeStorage.get('selectedPrinter').then((data)=> {
       this.selectedPrinter=  data;
       this.printerProvider.selectedPrinter = data;
       this.authService.hideLoading();
-      if(data) {
+      if(data && !this.isEdit) {
         this.print().then(()=> {
           this.closeModal();
+        }).catch(()=> {
+
         });
       }
       
@@ -88,9 +96,11 @@ export class PrintingPage {
     return new Promise((resolve,reject)=> {
       this.authService.displayLoading();
       this.printerProvider.print().then(()=> {
-        resolve(true);
         this.authService.hideLoading();
+        resolve(true);
       }).catch(()=> {
+        console.log("rekjecte");
+        this.authService.hideLoading();
         reject(true);
       });
     })

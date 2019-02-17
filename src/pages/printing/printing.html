@@ -19,14 +19,14 @@
 
 
 <ion-content class="page-printing" padding>
-  <h2 style="text-align: center; color: #1f6da3; background: #3a87ff; width: fit-content; margin: 0 auto; padding: 20px;color:white">N FACTURE {{printerProvider.order_id}}</h2>
+  <h2 *ngIf="!isEdit" style="text-align: center; color: #1f6da3; background: #3a87ff; width: fit-content; margin: 0 auto; padding: 20px;color:white">N FACTURE {{printerProvider.order_id}}</h2>
   <h6 *ngIf="!selectedPrinter" text-center color="error" style=" color:red">Aucune imprimante sélectionnée</h6>
-  <h6 *ngIf="selectedPrinter" text-center color="danger">
+  <h6 *ngIf="selectedPrinter" text-center color="danger" >
     L'imprimante "{{selectedPrinter.name}}"" est sélectionnée
   </h6>
   <div class="img-container" style="  text-align: center">
       <button ion-button  round (click)="OpenSearchModal()" small>Chercher</button><br>
-      <button round *ngIf="selectedPrinter" color="secondary" ion-button (click)="print()" small>Imprimer</button>
+      <button round *ngIf="selectedPrinter && !isEdit" color="secondary" ion-button (click)="print()" small>Imprimer</button>
       <img style="width: 140px; margin: 0 auto; display: block;" src="assets/imgs/printer.png" alt="your image">
       <ion-icon style="font-size: 40px; display: block;" *ngIf="!selectedPrinter"large name="close-circle" color="danger"></ion-icon>
       <ion-icon style="font-size: 40px; display: block;" *ngIf="selectedPrinter" large name="checkmark-circle" color="secondary"></ion-icon>
