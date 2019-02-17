@@ -41,7 +41,7 @@ export class ClientPage {
   
   scan() {
     this.barcodeScanner.scan().then(barcodeData => {
-        barcodeData.text = String(Math.random() * 100);
+        // barcodeData.text = String(Math.random() * 100);
         // console.log(barcodeData);
         if(barcodeData) {
           const prompt = this.alertCtrl.create({
