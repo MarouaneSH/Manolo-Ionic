@@ -48,9 +48,9 @@ export class PrinterProvider {
     articles_list += e.designation.padEnd(15, " ")  + e.quantite.toString().padStart(3, " ").padEnd(6, " ") + (e.prix_vente + "DH").toString().padStart(4, " ").padEnd(8, " ") + ((e.quantite * e.prix_vente) + "DH").toString().padStart(5, " ").padEnd(12, " ") + e.promos+`\r`;
   });
   let client_name= this.paiement.nom_client;
-  let chauffaur_name = this.paiement.nom_user;
+  let chauffaur_name = this.paiement.nom_user; 
   let quartier_name = ("Quartier : "+ this.paiement.libelle).padEnd(24, " ");
-  let date = new Date().toLocaleString().padStart(24, " ");
+  let date =  this.paiement.date_paiement.padStart(22, " ");
   let total_net = `Total NET a payer : ${this.paiement.montant} DH`.padStart(45, " ");
   let type_payment = `Type payment : ${this.paiement.type_paiement}`.padStart(45, " ");
 let printData =
@@ -58,8 +58,8 @@ let printData =
 -----------------------------------------------\r
                  Sté DISTRILAY \r
            AV de la meque, Bd mohamed 6.\r
-         Manolo N° 345 BP:52, LAAYOUN 70020 \r
-           Tél: 0528991322 / 0661283916\r
+       Imm Manolo N° 345 BP:52, LAAYOUN 70020 \r
+           Tél: 0528991422 / 0661283916\r
 ----------------------------------------------\r
 ${"Client".padEnd(24, " ")}${"Chauffeur".padStart(18, " ")}\r
 ${client_name.padEnd(24, " ")}${chauffaur_name.padStart(22, " ")}\r
@@ -113,14 +113,14 @@ ${type_payment}\r
             this.write().then(()=> {
               resolve(true);
             }).catch(()=> {
-              resolve(true);
+              reject(true);
             })
         }).catch(()=> {
           let xyz=this.btSerial.connect(this.selectedPrinter.address).subscribe(data=>{
             this.write().then(()=> {
               resolve(true);
             }).catch(()=> {
-              resolve(true);
+              reject(true);
             })
           },err=>{
             console.log("CONNECTION ERROR",err);
@@ -129,7 +129,7 @@ ${type_payment}\r
               buttons:['Dismiss']
             });
             mno.present();
-            resolve(true);
+            reject(true);
           });
         })
         
