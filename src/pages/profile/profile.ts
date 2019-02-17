@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, App } from 'ionic-angular';
 import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
 import {Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Storage } from '@ionic/storage';
 import { LoginPage } from '../login/login';
+import { PrintingPage } from '../printing/printing';
 
 
 
@@ -17,6 +18,8 @@ export class ProfilePage {
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
+              public app: App,
+              public modalCtrl: ModalController,
               private formBuilder: FormBuilder,
               public authService:AuthServiceProvider,
               private storage:Storage) {
@@ -48,11 +51,19 @@ export class ProfilePage {
     this.authService.post_request("logout", JSON.stringify({newPassword : this.loginForm.get('password').value}))
     .then((response) => {
       this.storage.remove("token").then(()=> {
-         this.navCtrl.setRoot(LoginPage);
+        //  this.navCtrl.setRoot(LoginPage);
+         this.app.getRootNav().setRoot(LoginPage);
       })
     }).then(()=> {
           this.authService.hideLoading();
     });
+  }
+
+  openImpression(){
+    //1. Open printer select modal
+    let modal=this.modalCtrl.create(PrintingPage , { isEdit: true});
+    //0. Present Modal
+    modal.present();
   }
 
 }
