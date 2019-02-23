@@ -76,14 +76,20 @@ export class PanierPage {
         "id_client" : data.text
       };  
       this.authService.post_request("article/add",post_data).then((response:any)=> {
-        if(response.client != null) {
+        if(response.success) {
           this.command =  {
             id : response.command_id,
             client : response.client
           };
           console.log(this.command.id);
         } else {
-          this.presentAlert("Client non trouvé");
+          if(response.unauthorize) {
+            this.presentAlert("Vous ne pouvez pas choisir ce client");
+           
+          } else {
+            this.presentAlert("Client non trouvé");
+          }
+          
         }
         
       }).then(()=>{
@@ -259,6 +265,10 @@ export class PanierPage {
               return false;
             }
 
+            if(data_quantite.quantite <= 0) {
+              alert.setMessage("la valeur de quantité sélectionnée doit etre positive");
+              return false;
+            }
           
 
             
@@ -278,9 +288,6 @@ export class PanierPage {
               //check if article has the min quantite to profit from promotion
               if(data_quantite.quantite >= article_promos[0].qte_min) {
                 article.has_promos = true; 
-                console.log(data_quantite.quantite);
-                console.log( article_promos[0].qte_min);
-                console.log( article_promos[0].qte_cadeau);
                 article.qte_cadeau = Math.floor(Math.floor((data_quantite.quantite /  article_promos[0].qte_min)) *  article_promos[0].qte_cadeau);
                 console.log("has promos");
               }

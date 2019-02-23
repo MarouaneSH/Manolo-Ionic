@@ -73,6 +73,8 @@ ${articles_list}
 ----------------------------------------------\r
 ${total_net}\r
 ${type_payment}\r
+\r 
+**********  Merci pour votre achat  ***********
 \r      
 \r
 `;
