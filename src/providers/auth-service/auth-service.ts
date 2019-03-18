@@ -6,7 +6,7 @@ import { ToastController } from 'ionic-angular';
 
 
 
-const API_URL = "http://cif.laraxio.com/manolo-api/api";
+const API_URL = "http://81.192.173.54/manolo-api/public/index.php/api";
 //  const API_URL = "http://localhost:8080/api";
 
 @Injectable()
